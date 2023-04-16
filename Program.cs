@@ -1,43 +1,27 @@
 ﻿using System.Text;
-using System.Text.RegularExpressions;
-
-string filename = "..\\..\\..\\in.txt";
-
-StreamReader? reader = null;
 
 Console.OutputEncoding = Encoding.UTF8;
 
-try
-{
-    reader = new StreamReader(filename);
-    string text = reader.ReadToEnd();
-    text = text.ToLower();
+double x1,x2,y1,y2;
 
-    var wordPattern = new Regex(@"\w+");
+Console.WriteLine("Введіть координати точки A:");
+x1 = Convert.ToDouble(Console.ReadLine());
+y1 = Convert.ToDouble(Console.ReadLine());
 
-    Dictionary<string, int> words = new Dictionary<string, int>();
+Console.WriteLine("Введіть координати точки B:");
+x2 = Convert.ToDouble(Console.ReadLine());
+y2 = Convert.ToDouble(Console.ReadLine());
 
-    foreach (Match match in wordPattern.Matches(text))
-    {
-        int currentCount = 0;
-        words.TryGetValue(match.Value, out currentCount);
+double angleA = getAngle(x1, y1, 1, 0);
+double angleB = getAngle(x2, y2, 1, 0);
 
-        currentCount++;
-        words[match.Value] = currentCount;
-    }
+string outText = angleA > angleB ? "OA" : "OB";
 
-    words = words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+Console.WriteLine(outText);
 
-    foreach (var word in words)
-    {
-        Console.WriteLine($"{word.Key} - {word.Value}");
-    }
-}
-catch
-{
-    Console.WriteLine("Файл не існує");
-}
-finally
-{
-    reader?.Close();
+double getAngle(double ax,double ay,double bx,double by) {
+    double fi = (ax * bx + ay * by) / (Math.Sqrt(ax * ax + ay * ay) * Math.Sqrt(bx * bx + by * by));
+
+    double angle = Math.Round(Math.Acos(fi) * 180/ Math.PI,3);
+    return angle;
 }
