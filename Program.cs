@@ -1,43 +1,46 @@
 ﻿using System.Text;
-using System.Text.RegularExpressions;
-
-string filename = "..\\..\\..\\in.txt";
-
-StreamReader? reader = null;
 
 Console.OutputEncoding = Encoding.UTF8;
 
-try
+Random rnd = new Random();
+int[] array1 = new int[rnd.Next(5, 10)];
+int[] array2 = new int[rnd.Next(5, 10)];
+
+Console.WriteLine("Масив 1:");
+
+for (int i = 0; i < array1.Length; i++)
 {
-    reader = new StreamReader(filename);
-    string text = reader.ReadToEnd();
-    text = text.ToLower();
+    array1[i] = rnd.Next(1, 101);
+    Console.Write($"{array1[i]} ");
+}
 
-    var wordPattern = new Regex(@"\w+");
+Console.WriteLine("\nМасив 2:");
+for (int i = 0; i < array2.Length; i++)
+{
+    array2[i] = rnd.Next(1, 101);
+    Console.Write($"{array2[i]} ");
+}
+Console.WriteLine();
+Console.WriteLine();
 
-    Dictionary<string, int> words = new Dictionary<string, int>();
+var tempArray = array1.Union(array2).ToArray();
 
-    foreach (Match match in wordPattern.Matches(text))
+int[] resultArray = new int[0];
+
+for (int i = 0; i < tempArray.Length; i++)
+{
+    if (tempArray[i] % 5 != 0)
     {
-        int currentCount = 0;
-        words.TryGetValue(match.Value, out currentCount);
-
-        currentCount++;
-        words[match.Value] = currentCount;
-    }
-
-    words = words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-
-    foreach (var word in words)
-    {
-        Console.WriteLine($"{word.Key} - {word.Value}");
+        Array.Resize(ref resultArray, resultArray.Length + 1);
+        resultArray[resultArray.Length - 1] = tempArray[i];
     }
 }
-catch
+
+Array.Sort(resultArray);
+
+Console.WriteLine("Результуючий масив:");
+for (int i = 0; i < resultArray.Length; i++)
 {
-    Console.WriteLine("Файл не існує");
+    Console.Write($"{resultArray[i]} ");
 }
-finally
-{
-    reader?.Close();
-}
+Console.WriteLine();
