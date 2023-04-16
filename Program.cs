@@ -1,43 +1,37 @@
 ﻿using System.Text;
-using System.Text.RegularExpressions;
 
-string filename = "..\\..\\..\\in.txt";
-
-StreamReader? reader = null;
+int index = 0;
 
 Console.OutputEncoding = Encoding.UTF8;
 
-try
-{
-    reader = new StreamReader(filename);
-    string text = reader.ReadToEnd();
-    text = text.ToLower();
+Console.WriteLine("Введіть індекс рядка Паскаля:");
+index = Convert.ToInt32(Console.ReadLine());
 
-    var wordPattern = new Regex(@"\w+");
+int []pascalRow = new int[index+1];
+pascalRow[0] = 1;
+pascalRow[pascalRow.Length - 1] = 1;
 
-    Dictionary<string, int> words = new Dictionary<string, int>();
-
-    foreach (Match match in wordPattern.Matches(text))
-    {
-        int currentCount = 0;
-        words.TryGetValue(match.Value, out currentCount);
-
-        currentCount++;
-        words[match.Value] = currentCount;
-    }
-
-    words = words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-
-    foreach (var word in words)
-    {
-        Console.WriteLine($"{word.Key} - {word.Value}");
-    }
+Console.WriteLine($"{index} - ий рядок Паскаля:");
+for (int i = 1; i < pascalRow.Length-1; i++) {
+    pascalRow[i] = combinatorial_number(i, index);
 }
-catch
+
+for (int i = 0; i < pascalRow.Length; i++)
 {
-    Console.WriteLine("Файл не існує");
+    Console.Write($"{pascalRow[i]} ");
 }
-finally
+Console.WriteLine();
+
+int combinatorial_number(int k,int n)
 {
-    reader?.Close();
+    int result = (factorial(n)) / (factorial(k) * factorial(n - k));
+    return result;
+}
+
+int factorial(int number)
+{
+    if (number == 1)
+        return 1;
+    else
+        return number * factorial(number - 1);
 }
