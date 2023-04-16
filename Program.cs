@@ -1,43 +1,23 @@
 ﻿using System.Text;
-using System.Text.RegularExpressions;
 
-string filename = "..\\..\\..\\in.txt";
-
-StreamReader? reader = null;
+int index = 0;
 
 Console.OutputEncoding = Encoding.UTF8;
 
-try
+Console.WriteLine("Введіть індекс числа Фібоначчі:");
+index = Convert.ToInt32(Console.ReadLine());
+
+int fibNum = fib(index);
+
+Console.WriteLine($"{index} - те число Фібоначчі = {fibNum}");
+
+
+int fib(int n)
 {
-    reader = new StreamReader(filename);
-    string text = reader.ReadToEnd();
-    text = text.ToLower();
-
-    var wordPattern = new Regex(@"\w+");
-
-    Dictionary<string, int> words = new Dictionary<string, int>();
-
-    foreach (Match match in wordPattern.Matches(text))
+    if (n <= 1)
     {
-        int currentCount = 0;
-        words.TryGetValue(match.Value, out currentCount);
-
-        currentCount++;
-        words[match.Value] = currentCount;
+        return n;
     }
 
-    words = words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-
-    foreach (var word in words)
-    {
-        Console.WriteLine($"{word.Key} - {word.Value}");
-    }
-}
-catch
-{
-    Console.WriteLine("Файл не існує");
-}
-finally
-{
-    reader?.Close();
+    return fib(n - 1) + fib(n - 2);
 }
