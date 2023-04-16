@@ -1,36 +1,23 @@
 ﻿using System.Text;
-using System.Text.RegularExpressions;
 
-string filename = "..\\..\\..\\in.txt";
+string filename = "";
 
 StreamReader? reader = null;
 
 Console.OutputEncoding = Encoding.UTF8;
 
+Console.WriteLine("Введіть шлях до файлу:");
+filename = Console.ReadLine();
+
 try
 {
     reader = new StreamReader(filename);
     string text = reader.ReadToEnd();
-    text = text.ToLower();
+    string reversedText = ReverseText(text);
 
-    var wordPattern = new Regex(@"\w+");
-
-    Dictionary<string, int> words = new Dictionary<string, int>();
-
-    foreach (Match match in wordPattern.Matches(text))
+    using (StreamWriter writer = new StreamWriter("out.txt", false, Encoding.UTF8))
     {
-        int currentCount = 0;
-        words.TryGetValue(match.Value, out currentCount);
-
-        currentCount++;
-        words[match.Value] = currentCount;
-    }
-
-    words = words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-
-    foreach (var word in words)
-    {
-        Console.WriteLine($"{word.Key} - {word.Value}");
+        writer.WriteLine(reversedText);
     }
 }
 catch
@@ -40,4 +27,11 @@ catch
 finally
 {
     reader?.Close();
+}
+
+string ReverseText(string text)
+{
+    char[] array = text.ToCharArray();
+    Array.Reverse(array);
+    return new String(array);
 }
