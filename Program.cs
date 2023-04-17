@@ -1,43 +1,17 @@
-﻿using System.Text;
-using System.Text.RegularExpressions;
-
-string filename = "..\\..\\..\\in.txt";
-
-StreamReader? reader = null;
-
-Console.OutputEncoding = Encoding.UTF8;
-
-try
+namespace Weather
 {
-    reader = new StreamReader(filename);
-    string text = reader.ReadToEnd();
-    text = text.ToLower();
-
-    var wordPattern = new Regex(@"\w+");
-
-    Dictionary<string, int> words = new Dictionary<string, int>();
-
-    foreach (Match match in wordPattern.Matches(text))
+    internal static class Program
     {
-        int currentCount = 0;
-        words.TryGetValue(match.Value, out currentCount);
-
-        currentCount++;
-        words[match.Value] = currentCount;
+        /// <summary>
+        ///  The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            // To customize application configuration such as set high DPI settings or default font,
+            // see https://aka.ms/applicationconfiguration.
+            ApplicationConfiguration.Initialize();
+            Application.Run(new Weather());
+        }
     }
-
-    words = words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-
-    foreach (var word in words)
-    {
-        Console.WriteLine($"{word.Key} - {word.Value}");
-    }
-}
-catch
-{
-    Console.WriteLine("Файл не існує");
-}
-finally
-{
-    reader?.Close();
 }
