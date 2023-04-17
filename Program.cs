@@ -1,37 +1,39 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 
-string filename = "..\\..\\..\\in.txt";
+string filename = "";
+string word = "";
+string mode = "";
 
 StreamReader? reader = null;
 
 Console.OutputEncoding = Encoding.UTF8;
 
+Console.WriteLine("Введіть слово для пошуку:");
+word = Console.ReadLine();
+
+Console.WriteLine("Введіть режим роботи: (1 - часткове співпадіння. 2 - повне співпадіння)");
+mode = Console.ReadLine();
+if (!mode.Equals("1") && !mode.Equals("2"))
+{
+    Console.WriteLine("Режим введено невірно");
+    return;
+}
+
+Console.WriteLine("Введіть шлях до файлу:");
+filename = Console.ReadLine();
+
 try
 {
     reader = new StreamReader(filename);
     string text = reader.ReadToEnd();
-    text = text.ToLower();
 
-    var wordPattern = new Regex(@"\w+");
+    string pattern1 = @""+word+"";
+    string pattern2 = @"\b"+word+@"\b";
+    RegexOptions options = RegexOptions.Multiline | RegexOptions.IgnoreCase;
+    long matchesCount = Regex.Matches(text, (mode.Equals("1") ? pattern1 : pattern2), options).LongCount();
 
-    Dictionary<string, int> words = new Dictionary<string, int>();
-
-    foreach (Match match in wordPattern.Matches(text))
-    {
-        int currentCount = 0;
-        words.TryGetValue(match.Value, out currentCount);
-
-        currentCount++;
-        words[match.Value] = currentCount;
-    }
-
-    words = words.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-
-    foreach (var word in words)
-    {
-        Console.WriteLine($"{word.Key} - {word.Value}");
-    }
+    Console.WriteLine($"Кількість співпадінь = {matchesCount}");
 }
 catch
 {
